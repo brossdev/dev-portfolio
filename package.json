@@ -38,6 +38,7 @@
   "scripts": {
     "clean": "gatsby clean",
     "build": "run-p build:**",
+    "build:app": "npm run clean && gatsby build",
     "develop": "npm run clean && gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "run-p start:**",
