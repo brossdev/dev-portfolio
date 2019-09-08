@@ -2,7 +2,7 @@
   "name": "dev-portfolio",
   "private": true,
   "description": "Developer Portfolio for Bobby Ross",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Bobby Ross <contactme.@bobbyross.dev>",
   "dependencies": {
     "@emotion/core": "^10.0.17",
