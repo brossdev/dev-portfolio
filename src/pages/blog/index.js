@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Layout from '../../components/layout';
-import BlogList from '../../components/BlogList';
+import BlogList from '../../components/blogList';
 
 const BlogIndexPage = () => {
   return (
