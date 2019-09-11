@@ -24,14 +24,16 @@
  * - MY_AWS_SECRET_ACCESS_KEY
  */
 
+console.log(process.env);
+
 const AWS = require('aws-sdk');
 const querystring = require('querystring');
 
 const ses = new AWS.SES({
-  region: process.env['AWS_REGION'],
+  region: process.env['GATSBY_AWS_REGION'],
   credentials: new AWS.Credentials(
-    process.env['MY_AWS_ACCESS_KEY_ID'],
-    process.env['MY_AWS_SECRET_ACCESS_KEY']
+    process.env['GATSBY_AWS_ACCESS_KEY_ID'],
+    process.env['GATSBY_AWS_SECRET_ACCESS_KEY']
   ),
 });
 
@@ -55,7 +57,7 @@ function redir(code) {
   return {
     statusCode: 303,
     headers: {
-      Location: process.env['QUESTION_FORM_URL'] + (code ? `#${code}` : ''),
+      Location: process.env['QUESTIONFORMURL'] + (code ? `#${code}` : ''),
     },
   };
 }
@@ -77,8 +79,8 @@ const sendQuestion = async (event, context) => {
   const params = querystring.parse(event['body']);
 
   if (
-    process.env['QUESTION_FORM_HONEYPOT'] &&
-    params[process.env['QUESTION_FORM_HONEYPOT']]
+    process.env['QUESTIONFORMHONEYPOT'] &&
+    params[process.env['QUESTIONFORMHONEYPOT']]
   ) {
     console.info('Bot trapped in honeypot');
     return;
@@ -86,14 +88,14 @@ const sendQuestion = async (event, context) => {
 
   const errs = [];
   if (!params['email']) errs.push('no-email');
-  if (!params['question']) errs.push('no-question');
+  if (!params['message']) errs.push('no-message');
   if (errs.length > 0) return redir(errs.join(','));
 
   sendEmail(
     params['name']
       ? `${mimeEncode(params['name'])} <${params['email']}>`
       : params['email'],
-    params['question']
+    params['message']
   );
 };
 
@@ -103,15 +105,15 @@ const sendQuestion = async (event, context) => {
 function sendEmail(replyTo, text) {
   ses.sendEmail(
     {
-      Source: process.env['QUESTION_FORM_FROM'],
+      Source: process.env['QUESTIONFORMFROM'],
       Destination: {
-        ToAddresses: [process.env['QUESTION_FORM_TO']],
+        ToAddresses: [process.env['QUESTIONFORMTO']],
       },
       ReplyToAddresses: [replyTo],
       Message: {
         Subject: {
           Charset: 'UTF-8',
-          Data: process.env['QUESTION_FORM_SUBJECT'],
+          Data: 'Testing Email - to come from form',
         },
         Body: {
           Text: {
