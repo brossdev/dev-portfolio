@@ -30,10 +30,10 @@ const AWS = require('aws-sdk');
 const querystring = require('querystring');
 
 const ses = new AWS.SES({
-  region: process.env['GATSBY_AWS_REGION'],
+  region: process.env['NET_AWS_REGION'],
   credentials: new AWS.Credentials(
-    process.env['GATSBY_AWS_ACCESS_KEY_ID'],
-    process.env['GATSBY_AWS_SECRET_ACCESS_KEY']
+    process.env['NET_AWS_ACCESS_KEY_ID'],
+    process.env['NET_AWS_SECRET_ACCESS_KEY']
   ),
 });
 
@@ -57,7 +57,7 @@ function redir(code) {
   return {
     statusCode: 303,
     headers: {
-      Location: process.env['QUESTIONFORMURL'] + (code ? `#${code}` : ''),
+      Location: process.env['QUESTION_FORM_URL'] + (code ? `#${code}` : ''),
     },
   };
 }
@@ -77,10 +77,11 @@ const sendQuestion = async (event, context) => {
   }
 
   const params = querystring.parse(event['body']);
+  console.log({ params: params.message });
 
   if (
-    process.env['QUESTIONFORMHONEYPOT'] &&
-    params[process.env['QUESTIONFORMHONEYPOT']]
+    process.env['QUESTION_FORM_HONEYPOT'] &&
+    params[process.env['QUESTION_FORM_HONEYPOT']]
   ) {
     console.info('Bot trapped in honeypot');
     return;
@@ -95,7 +96,7 @@ const sendQuestion = async (event, context) => {
     params['name']
       ? `${mimeEncode(params['name'])} <${params['email']}>`
       : params['email'],
-    params['message']
+    params.message
   );
 };
 
@@ -103,22 +104,23 @@ const sendQuestion = async (event, context) => {
  * Sends email via AWS SES API.
  */
 function sendEmail(replyTo, text) {
+  console.log({ text });
   ses.sendEmail(
     {
-      Source: process.env['QUESTIONFORMFROM'],
+      Source: process.env['QUESTION_FORM_FROM'],
       Destination: {
-        ToAddresses: [process.env['QUESTIONFORMTO']],
+        ToAddresses: [process.env['QUESTION_FORM_TO']],
       },
       ReplyToAddresses: [replyTo],
       Message: {
         Subject: {
           Charset: 'UTF-8',
-          Data: 'Testing Email - to come from form',
+          Data: 'hi',
         },
         Body: {
           Text: {
             Charset: 'UTF-8',
-            Data: text,
+            Data: 'hi',
           },
         },
       },
