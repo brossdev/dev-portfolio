@@ -7,7 +7,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.17",
     "@emotion/styled": "^10.0.17",
-    "aws-sdk": "^2.525.0",
+    "aws-sdk": "^2.814.0",
     "emotion-theming": "^10.0.17",
     "gatsby": "^2.13.73",
     "gatsby-image": "^2.2.10",
